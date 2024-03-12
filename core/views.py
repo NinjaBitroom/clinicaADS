@@ -7,7 +7,7 @@ from django.views import View
 from django.views.generic import TemplateView, ListView
 from xhtml2pdf import pisa
 
-from core.models import Paciente, Medico
+from core.models import Paciente, Medico, Possui
 
 
 class PDFView(View):
@@ -41,30 +41,36 @@ class PacientesListView(ListView):
     context_object_name = 'pacientes'
 
 
-# class RelatPdfPacientes(View):
-#     def get(self, request):
-#         pacientes = Paciente.objects.all()
-#         data = {
-#             'pacientes': pacientes,
-#         }
-#         template = get_template('relatorios/pdfpacientes.html')
-#         html = template.render(data)
-#         result = BytesIO()
-#         try:
-#             pisa.pisaDocument(BytesIO(html.encode('utf-8')), result)
-#             return HttpResponse(result.getvalue(), content_type='application/pdf')
-#         except Exception as e:
-#             print(e)
-#             return None
-
-
 class RelatPdfPacientes(PDFView):
     template_name = 'relatorios/pdfpacientes.html'
     model = Paciente
     context_object_name = 'pacientes'
 
+# Crie os relatórios abaixo relacionados em pdf, utilizando a biblioteca xhtml2pdf.
+# Deve haver links para geração dos relatórios.
+# Os relatórios são os seguintes:
+# 1 - Relatório nomes e idades de pacientes por convênio.
 
-class RelatPdfMedicos(PDFView):
-    template_name = 'relatorios/pdfmedicos.html'
-    model = Medico
-    context_object_name = 'medicos'
+
+class RelatPdfPacientesConvenio(PDFView):
+    template_name = 'relatorios/pdfpacientesconvenio.html'
+    model = Possui
+    context_object_name = 'paconvs'
+
+    def get(self, request):
+        objects = self.model.objects.all()
+        my_dict = {}
+        for paconv in objects:
+            my_dict[paconv.convenio.nome] = {}
+        for paconv in objects:
+            my_dict[paconv.convenio.nome][paconv.paciente.nome] = paconv.paciente.idade
+        data = {self.context_object_name: my_dict}
+        template = get_template(self.template_name)
+        html = template.render(data)
+        result = BytesIO()
+        try:
+            pisa.pisaDocument(BytesIO(html.encode('utf-8')), result)
+            return HttpResponse(result.getvalue(), content_type='application/pdf')
+        except Exception as e:
+            print(e)
+            return None

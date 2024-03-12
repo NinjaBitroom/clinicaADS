@@ -79,7 +79,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'clinicaADS2024',
         'USER': 'root',
-        'PASSWORD': 'alunoifro',
+        # 'PASSWORD': 'alunoifro',
         'HOST': 'localhost',
     }
 }

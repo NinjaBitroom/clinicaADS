@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block title %}
+	Pacientes por Convênio
+{% endblock %}
+{% block main %}
+    {% for conv, pacs in paconvs.items %}
+        <h1>{{ conv }}</h1>
+        {% for pac in pacs %}
+            <p>{{ pac }} anos</p>
+        {% endfor %}
+    {% endfor %}
+{% endblock %}
