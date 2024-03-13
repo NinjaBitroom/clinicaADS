@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block title %}
+    Pacientes por Convênio
+{% endblock %}
+{% block main %}
+    {% for conv, pacs in paconvs.items %}
+        <table style="border: black solid; padding: 3px">
+            <thead>
+            <tr>
+                <th colspan="2">{{ conv }}</th>
+            </tr>
+            </thead>
+            <tbody>
+            {% for nome, idade in pacs.items %}
+                <tr>
+                    <td>{{ nome }}</td>
+                    <td>{{ idade }} anos</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    {% endfor %}
+{% endblock %}
