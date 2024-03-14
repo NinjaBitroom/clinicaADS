@@ -1,12 +1,10 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Pacientes por Convênio</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% block title %}
+    Pacientes por Convênio
+{% endblock %}
+{% block main %}
     {% for conv, pacs in paconvs.items %}
-        <table style="border: black solid; padding: 3px">
+        <table>
             <thead>
             <tr>
                 <th colspan="2">{{ conv }}</th>
@@ -21,7 +19,6 @@
             {% endfor %}
             </tbody>
         </table>
-        <br>
     {% endfor %}
-</body>
-</html>
+    <a href="{% url 'pdf_pacientes_convenio' %}" role="button">Gerar PDF</a>
+{% endblock %}

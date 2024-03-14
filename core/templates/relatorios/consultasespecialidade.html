@@ -1,11 +1,9 @@
-<!DOCTYPE html>
-<html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <title>Consultas e Especialidades</title>
-</head>
-<body>
-    <table style="border: black solid; padding: 3px">
+{% extends 'base.html' %}
+{% block title %}
+    Consultas e Especialidades
+{% endblock %}
+{% block main %}
+    <table>
         <thead>
         <tr>
             <th>Mês</th>
@@ -21,5 +19,5 @@
         {% endfor %}
         </tbody>
     </table>
-</body>
-</html>
+    <a href="{% url 'pdf_consultas' %}" role="button">Gerar PDF</a>
+{% endblock %}

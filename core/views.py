@@ -49,6 +49,21 @@ class RelatPdfPacientes(PDFView):
     context_object_name = 'pacientes'
 
 
+class PacientesConvenioView(TemplateView):
+    template_name = 'relatorios/pacientesconvenio.html'
+
+    def get_context_data(self, **kwargs):
+        contexto = super().get_context_data(**kwargs)
+        possui = Possui.objects.all()
+        my_dict = {}
+        for paconv in possui:
+            my_dict[paconv.convenio.nome] = {}
+        for paconv in possui:
+            my_dict[paconv.convenio.nome][paconv.paciente.nome] = paconv.paciente.idade
+        contexto['paconvs'] = my_dict
+        return contexto
+
+
 class RelatPdfPacientesConvenio(PDFView):
     template_name = 'relatorios/pdfpacientesconvenio.html'
     model = Possui
@@ -71,6 +86,17 @@ class RelatPdfPacientesConvenio(PDFView):
         except Exception as e:
             print(e)
             return None
+
+
+class ConsultasEspecialidadeView(TemplateView):
+    template_name = 'relatorios/consultasespecialidade.html'
+
+    def get_context_data(self, **kwargs):
+        contexto = super().get_context_data(**kwargs)
+        consultas = Consulta.objects.all()
+        my_list = [(i.data.month, i.medico.especialidade) for i in consultas]
+        contexto['consultas'] = my_list
+        return contexto
 
 
 class RelatPdfConsultasEspecialidade(PDFView):
