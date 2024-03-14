@@ -11,6 +11,21 @@ from xhtml2pdf import pisa
 
 from core.models import Paciente, Possui, Consulta, Convenio
 
+_MES = {
+    1: 'Janeiro',
+    2: 'Fevereiro',
+    3: 'Março',
+    4: 'Abril',
+    5: 'Maio',
+    6: 'Junho',
+    7: 'Julho',
+    8: 'Agosto',
+    9: 'Setembro',
+    10: 'Outubro',
+    11: 'Novembro',
+    12: 'Dezembro'
+}
+
 
 class PDFView(View):
     template_name: str
@@ -94,7 +109,7 @@ class ConsultasEspecialidadeView(TemplateView):
     def get_context_data(self, **kwargs):
         contexto = super().get_context_data(**kwargs)
         consultas = Consulta.objects.all()
-        my_list = [(i.data.month, i.medico.especialidade) for i in consultas]
+        my_list = [(_MES[i.data.month], i.medico.especialidade) for i in consultas]
         contexto['consultas'] = my_list
         return contexto
 
@@ -106,7 +121,7 @@ class RelatPdfConsultasEspecialidade(PDFView):
 
     def get(self, request):
         objects = self.model.objects.all()
-        my_list = [(i.data.month, i.medico.especialidade) for i in objects]
+        my_list = [(_MES[i.data.month], i.medico.especialidade) for i in objects]
         data = {self.context_object_name: my_list}
         template = get_template(self.template_name)
         html = template.render(data)
@@ -119,6 +134,21 @@ class RelatPdfConsultasEspecialidade(PDFView):
             return None
 
 
+class PacientesEspecialidadeView(TemplateView):
+    template_name = 'relatorios/pacientesespecialidade.html'
+
+    def get_context_data(self, **kwargs):
+        contexto = super().get_context_data(**kwargs)
+        consultas = Consulta.objects.all()
+        my_dict = {}
+        for consulta in consultas:
+            my_dict[(_MES[consulta.data.month], consulta.medico.especialidade)] = 0
+        for consulta in consultas:
+            my_dict[(_MES[consulta.data.month], consulta.medico.especialidade)] += 1
+        contexto['consultas'] = my_dict
+        return contexto
+
+
 class RelatPdfPacientesEspecialidade(PDFView):
     template_name = 'relatorios/pdfpacientesespecialidade.html'
     model = Consulta
@@ -128,9 +158,9 @@ class RelatPdfPacientesEspecialidade(PDFView):
         objects = self.model.objects.all()
         my_dict = {}
         for consulta in objects:
-            my_dict[(consulta.data.month, consulta.medico.especialidade)] = 0
+            my_dict[(_MES[consulta.data.month], consulta.medico.especialidade)] = 0
         for consulta in objects:
-            my_dict[(consulta.data.month, consulta.medico.especialidade)] += 1
+            my_dict[(_MES[consulta.data.month], consulta.medico.especialidade)] += 1
         data = {self.context_object_name: my_dict}
         template = get_template(self.template_name)
         html = template.render(data)
