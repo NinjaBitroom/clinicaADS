@@ -1,3 +1,4 @@
+import base64
 from io import BytesIO
 
 from django.db.models import Model
@@ -5,9 +6,10 @@ from django.http import HttpResponse
 from django.template.loader import get_template
 from django.views import View
 from django.views.generic import TemplateView, ListView
+from matplotlib import pyplot
 from xhtml2pdf import pisa
 
-from core.models import Paciente, Possui, Consulta
+from core.models import Paciente, Possui, Consulta, Convenio
 
 
 class PDFView(View):
@@ -47,12 +49,6 @@ class RelatPdfPacientes(PDFView):
     context_object_name = 'pacientes'
 
 
-# Crie os relatórios abaixo relacionados em pdf, utilizando a biblioteca xhtml2pdf.
-# Deve haver links para geração dos relatórios.
-# Os relatórios são os seguintes:
-# 1 - Relatório nomes e idades de pacientes por convênio.
-
-
 class RelatPdfPacientesConvenio(PDFView):
     template_name = 'relatorios/pdfpacientesconvenio.html'
     model = Possui
@@ -77,9 +73,6 @@ class RelatPdfPacientesConvenio(PDFView):
             return None
 
 
-# 2- Relatório de consultas por especialidade e por mês.
-
-
 class RelatPdfConsultasEspecialidade(PDFView):
     template_name = 'relatorios/pdfconsultasespecialidade.html'
     model = Consulta
@@ -98,9 +91,6 @@ class RelatPdfConsultasEspecialidade(PDFView):
         except Exception as e:
             print(e)
             return None
-
-
-# 3- Relatório de quantidade de pacientes atendidos por especialidade e por mês.
 
 
 class RelatPdfPacientesEspecialidade(PDFView):
@@ -125,3 +115,33 @@ class RelatPdfPacientesEspecialidade(PDFView):
         except Exception as e:
             print(e)
             return None
+
+
+class ConsConvView(TemplateView):
+    template_name = 'graficos/consultasconvenio.html'
+
+    def get_context_data(self, **kwargs):
+        contexto = super().get_context_data(**kwargs)
+        tabela = Consulta.objects.all().order_by('convenio')
+        contexto['tabela'] = tabela
+        contexto['grafico'] = self._criar_grafico()
+        return contexto
+
+    def _criar_grafico(self):
+        convenios = Convenio.objects.all()
+        glabels = []
+        gvalores = []
+        for c in convenios:
+            quantidade = Consulta.objects.filter(convenio=c).count()
+            if quantidade > 0:
+                glabels.append(c.nome)
+                gvalores.append(quantidade)
+        pyplot.pie(gvalores, labels=glabels)
+        buffer = BytesIO()
+        pyplot.savefig(buffer, format='png')
+        buffer.seek(0)
+        imagem = buffer.getvalue()
+        grafico = base64.b64encode(imagem)
+        grafico = grafico.decode('utf-8')
+        buffer.close()
+        return grafico

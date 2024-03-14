@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}
+	Titulo
+{% endblock %}
+{% block main %}
+	<header>
+        <h1>Consultas por Convênio</h1>
+    </header>
+    <article data-theme="dark" style="text-align: center">
+        <img src="data:image/png;base64, {{ grafico|safe }}" alt="grafico" id="img">
+    </article>
+    <article>
+        <table class="striped">
+            <thead>
+                <tr>
+                    <th>Data</th>
+                    <th>Paciente</th>
+                    <th>Médico</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for linha in tabela %}
+                    <tr>
+                        <td>{{ linha.data }}</td>
+                        <td>{{ linha.paciente.nome }}</td>
+                        <td>{{ linha.medico.nome }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </article>
+{% endblock %}

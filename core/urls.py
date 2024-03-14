@@ -9,4 +9,5 @@ urlpatterns = [
     path('relatorios/pdfpacientesconvenio', views.RelatPdfPacientesConvenio.as_view(), name='pdf_pacientes_convenio'),
     path('relatorios/pdfconsultas', views.RelatPdfConsultasEspecialidade.as_view(), name='pdf_consultas'),
     path('relatorios/pdfconsultasmedico', views.RelatPdfPacientesEspecialidade.as_view(), name='pdf_consultas_medico'),
+    path('graficos/consultasconvenio', views.ConsConvView.as_view(), name='graf_cons_conv'),
 ]

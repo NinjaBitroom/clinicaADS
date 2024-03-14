@@ -1,10 +1,27 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Título</title>
 </head>
 <body>
-    {{ consultas }}
+    <table style="border: black solid; padding: 3px">
+        <thead>
+        <tr>
+            <th>Mês</th>
+            <th>Especialidade</th>
+            <th>Quantidade</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for mes, espec in consultas.items %}
+            <tr>
+                <td>{{ mes.0 }}</td>
+                <td>{{ mes.1 }}</td>
+                <td>{{ espec }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
 </body>
 </html>
