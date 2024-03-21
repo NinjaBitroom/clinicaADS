@@ -21,4 +21,5 @@ urlpatterns = [
         name='pdf_pacientes_especialidade'
     ),
     path('graficos/consultasconvenio', views.ConsConvView.as_view(), name='graf_cons_conv'),
+    path('graficos/paconvenio', views.PacientePorConvenioListView.as_view(), name='graf_pac_conv'),
 ]

@@ -19,6 +19,8 @@
     </content>
     <orderEntry type="jdk" jdkName="Python 3.12 (clinicaADS)" jdkType="Python SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="loader" level="application" />
+    <orderEntry type="library" name="@picocss/pico" level="application" />
   </component>
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Django" />

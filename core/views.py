@@ -201,3 +201,21 @@ class ConsConvView(TemplateView):
         grafico = grafico.decode('utf-8')
         buffer.close()
         return grafico
+
+
+class PacientePorConvenioListView(ListView):
+    template_name = 'graficos/paconvgooglechart.html'
+    model = Paciente
+    context_object_name = 'pacientes'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        contexto = super().get_context_data(object_list=object_list, **kwargs)
+        convenios = Convenio.objects.all()
+        dados = []
+        for c in convenios:
+            dados.append({
+                'convenio': c.nome,
+                'pacientes': Possui.objects.filter(convenio=c.codconv).count()
+            })
+        contexto['dados'] = dados
+        return contexto
