@@ -14,6 +14,14 @@
     <!--Load the AJAX API-->
     <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
     <script type="text/javascript">
+        /**
+         * @var {any} google
+         * @property {any} charts
+         * @property {any} setOnLoadCallback
+         * @property {any} visualization
+         * @property {any} arrayToDataTable
+         * @property {any} BarChart
+         */
         // Load the Visualization API and the corechart package.
         google.charts.load('current', {'packages': ['corechart']});
         // Set a callback to run when the Google Visualization API is loaded.
@@ -23,7 +31,7 @@
         // draws it.
         function drawChart() {
             // Create the data table.
-            var data = new google.visualization.arrayToDataTable([
+            const data = new google.visualization.arrayToDataTable([
                 ['Convênio', 'Quant. Pacientes', {role: "style"}],
                 {% for d in dados %}
                     ['{{ d.convenio }}', {{ d.pacientes }}, `color: rgb(${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)}, ${Math.floor(Math.random() * 255)})`],
@@ -31,7 +39,7 @@
             ]);
 
             // Set chart options
-            var options = {
+            const options = {
                 'title': 'Pacientes por Convênio',
                 'width': 480,
                 'height': 480,
@@ -40,7 +48,7 @@
             };
 
             // Instantiate and draw our chart, passing in some options.
-            var chart = new google.visualization.BarChart(document.getElementById('barchart_values'));
+            const chart = new google.visualization.BarChart(document.getElementById('barchart_values'));
             chart.draw(data, options);
         }
     </script>
