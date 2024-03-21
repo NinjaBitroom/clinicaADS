@@ -22,4 +22,5 @@ urlpatterns = [
     ),
     path('graficos/consultasconvenio', views.ConsConvView.as_view(), name='graf_cons_conv'),
     path('graficos/paconvenio', views.PacientePorConvenioListView.as_view(), name='graf_pac_conv'),
+    path('graficos/consutasespecialidades', views.GraficoConsultaEspecialidadeView.as_view(), name='graf_cons_esp'),
 ]

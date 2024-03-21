@@ -219,3 +219,18 @@ class PacientePorConvenioListView(ListView):
             })
         contexto['dados'] = dados
         return contexto
+
+
+class GraficoConsultaEspecialidadeView(TemplateView):
+    template_name = 'graficos/consultasespecialidades.html'
+
+    def get_context_data(self, **kwargs):
+        contexto = super().get_context_data(**kwargs)
+        consultas = Consulta.objects.all()
+        my_dict = {}
+        for consulta in consultas:
+            my_dict[consulta.medico.especialidade] = 0
+        for consulta in consultas:
+            my_dict[consulta.medico.especialidade] += 1
+        contexto['especialidades'] = my_dict
+        return contexto
